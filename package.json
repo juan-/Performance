@@ -1,0 +1,17 @@
+{
+  "name": "LivePerformance",
+  "description": "DANCE 321 Project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juan-/performance.git"
+  },
+  "keywords": [],
+  "author": "Juan Sepulveda, Jonathan Zong",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.0"
+  }
+}
