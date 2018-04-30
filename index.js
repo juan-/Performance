@@ -15,7 +15,6 @@ mov[3].name = 'Duncan';*/
 //    }
 //}
 
-console.log(mov);
 
 app.get('/', function(req, res){
 	res.send('dance. dance Jonathan.')
@@ -26,7 +25,7 @@ io.on('connection', function(socket){
   console.log('a user connected');
 });
 
-http.listen(3000, function(){
+http.listen( function(){
   console.log('listening on *:3000');
 });
     
