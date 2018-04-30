@@ -1,6 +1,11 @@
+var expressHbs = require('express-handlebars');
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
+app.set('view engine', '.hbs');
 
 var port = process.env.PORT || 8080;
 
@@ -14,7 +19,7 @@ var voters = [];
 
 var fTimer;
 
-// simulation response 
+// simulation response
 // votes[0] = 4;
 // votes[1] = 5;
 // votes[2] = 1;
@@ -76,9 +81,10 @@ function calc() {
 /******** URL HANDLING *******/
 
 app.get('/', function(req, res){
-	res.session.id = getRandomInt(100); // prevents double voting
-	res.send('dance. dance Jonathan.');
+	// res.session.id = getRandomInt(100); // prevents double voting
+	// res.send('dance. dance Jonathan.');
   //res.sendFile(__dirname + '/index.html');
+  res.render('index', { title: 'DAN 321' });
 });
 
 app.get('/begin', function(req, res){
@@ -103,4 +109,3 @@ io.on('connection', function(socket){
 app.listen(port, function(){
   console.log('listening on *:8080');
 });
-    
