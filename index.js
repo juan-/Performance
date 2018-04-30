@@ -6,46 +6,66 @@ var port = process.env.PORT || 8080;
 
 var section = [1, 16, 31, 46];
 
-var d = 6;
+var d = 4;
 var votes = [];
 var prob = [];
+var voters = [];
+var moves = [];
+
 
 // sim response 
-votes[1] = 2;
-votes[2] = 3;
-votes[3] = 2;
-votes[4] = 3;
+votes[0] = 1;
+votes[1] = 8;
+votes[2] = 2;
+votes[3] = 8;
 numVotes = votes.reduce((a, b) => a + b, 0);
-console.log(numVotes)
+// console.log(numVotes)
 
-prob[1] = Math.floor(votes[1]/numVotes*d);
-prob[2] = Math.floor(votes[2]/numVotes*d);
-prob[3] = Math.floor(votes[3]/numVotes*d);
-prob[4] = Math.floor(votes[4]/numVotes*d);
-
-
-console.log(prob)
-/*var mov = {0:[],1:[],2:[],3:[]};
-mov[0].name = 'Granham';
-mov[1].name = 'Dunham';
-mov[2].name = 'Limon';
-mov[3].name = 'Duncan';*/
+// Debug
+// prob[1] = Math.floor(votes[0]/numVotes*d);
+// prob[2] = Math.floor(votes[1]/numVotes*d);
+// prob[3] = Math.floor(votes[2]/numVotes*d);
+// prob[4] = Math.floor(votes[3]/numVotes*d);
+//console.log(prob)
 
 
-//for (i = 1; i <= 60; 1+15*i) {
-//    for (j = 0; j < 15; j++) {
-//        mov[Math.floor(i / 15)].numers.push(i + j);
-//    }
-//}
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
 
+function calc () {
+	var numVotes = votes.reduce((a, b) => a + b, 0);
+	console.log(numVotes)
+	for (i=0; i < 4; i++) {
+		prob[i] = Math.round(votes[i]/(numVotes)*d);
+		for(j=0;j < prob[i];j++) {
+			moves.push(getRandomInt(15) + section[i]);
+		}
+	}
+	console.log(prob);
+	console.log(moves);
+
+}
+
+calc();
+
+
+/******** URL HANDLING *******/
 
 app.get('/', function(req, res){
-	res.send('dance. dance Jonathan.')
+	res.session.id = getRandomInt(100); // prevents double voting
+	res.send('dance. dance Jonathan.');
   //res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket){
   console.log('a user connected');
+  socket.on('vote', function(move, id){
+  	if (!voters[id]) {
+  		votes[move] = votes[move] + 1;
+  		voters[id] = 1;
+  	}
+  });
 });
 
 app.listen(port, function(){
