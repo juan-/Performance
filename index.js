@@ -14,13 +14,14 @@ var voters = [];
 
 var fTimer;
 
-// sim response 
-votes[0] = 1;
-votes[1] = 8;
-votes[2] = 2;
-votes[3] = 8;
-numVotes = votes.reduce((a, b) => a + b, 0);
-// console.log(numVotes)
+// simulation response 
+// votes[0] = 1;
+// votes[1] = 8;
+// votes[2] = 2;
+// votes[3] = 8;
+// numVotes = votes.reduce((a, b) => a + b, 0);
+// calc();
+
 
 // Debug
 // prob[1] = Math.floor(votes[0]/numVotes*d);
@@ -30,20 +31,14 @@ numVotes = votes.reduce((a, b) => a + b, 0);
 //console.log(prob)
 
 function start() {
-	fTimer = setTimeout(roundStart, 60000);
-}
-
-function roundStart() {
-	prob = [];
-	moves = [];
-	votes = [];
-	voters = [];
+	fTimer = setTimeout(calc, 60000);
 }
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+// Calculate the number of moves per dancer from voting results and brodcast them
 function calc() {
 	var numVotes = votes.reduce((a, b) => a + b, 0);
 	console.log(numVotes)
@@ -55,8 +50,13 @@ function calc() {
 	}
 	console.log(prob);
 	console.log(moves);
+
+	// send new moves
+	io.emit('moves', moves);
+	// reset params
+	votes = [];
+	voters = [];
 }
-calc();
 
 
 /******** URL HANDLING *******/
@@ -68,11 +68,13 @@ app.get('/', function(req, res){
 });
 
 app.get('/begin', function(req, res){
-	voters = [];
-	votes = [];
-	prob = [];
-
+	start();
 });
+
+app.get('/stop', function(req, res){
+	clearTimeout(fTimer);
+});
+
 
 io.on('connection', function(socket){
   console.log('a user connected');
