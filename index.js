@@ -15,10 +15,10 @@ var voters = [];
 var fTimer;
 
 // simulation response 
-// votes[0] = 1;
-// votes[1] = 8;
-// votes[2] = 2;
-// votes[3] = 8;
+// votes[0] = 4;
+// votes[1] = 5;
+// votes[2] = 1;
+// votes[3] = 2;
 // numVotes = votes.reduce((a, b) => a + b, 0);
 // calc();
 
@@ -38,6 +38,20 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+function gaussianRand() {
+  var rand = 0;
+
+  for (var i = 0; i < 6; i += 1) {
+    rand += Math.random();
+  }
+
+  return rand / 6;
+}
+
+function gaussianRandom(start, end) {
+  return Math.floor(start + gaussianRand() * (end - start + 1));
+}
+
 // Calculate the number of moves per dancer from voting results and brodcast them
 function calc() {
 	var numVotes = votes.reduce((a, b) => a + b, 0);
@@ -45,7 +59,7 @@ function calc() {
 	for (i=0; i < 4; i++) {
 		prob[i] = Math.round(votes[i]/(numVotes)*d);
 		for(j=0;j < prob[i];j++) {
-			moves.push(getRandomInt(15) + section[i]);
+			moves.push(gaussianRandom(0, 15) + section[i]);
 		}
 	}
 	console.log(prob);
