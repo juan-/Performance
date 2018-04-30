@@ -7,11 +7,12 @@ var port = process.env.PORT || 8080;
 var section = [1, 16, 31, 46];
 
 var d = 4;
-var votes = [];
 var prob = [];
-var voters = [];
+var votes = [];
 var moves = [];
+var voters = [];
 
+var fTimer;
 
 // sim response 
 votes[0] = 1;
@@ -28,12 +29,22 @@ numVotes = votes.reduce((a, b) => a + b, 0);
 // prob[4] = Math.floor(votes[3]/numVotes*d);
 //console.log(prob)
 
+function start() {
+	fTimer = setTimeout(roundStart, 60000);
+}
+
+function roundStart() {
+	prob = [];
+	moves = [];
+	votes = [];
+	voters = [];
+}
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function calc () {
+function calc() {
 	var numVotes = votes.reduce((a, b) => a + b, 0);
 	console.log(numVotes)
 	for (i=0; i < 4; i++) {
@@ -44,9 +55,7 @@ function calc () {
 	}
 	console.log(prob);
 	console.log(moves);
-
 }
-
 calc();
 
 
@@ -56,6 +65,13 @@ app.get('/', function(req, res){
 	res.session.id = getRandomInt(100); // prevents double voting
 	res.send('dance. dance Jonathan.');
   //res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/begin', function(req, res){
+	voters = [];
+	votes = [];
+	prob = [];
+
 });
 
 io.on('connection', function(socket){
