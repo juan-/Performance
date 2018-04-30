@@ -1,11 +1,13 @@
 var expressHbs = require('express-handlebars');
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 app.set('view engine', '.hbs');
+app.use(express.static('public'));
 
 var port = process.env.PORT || 8080;
 
@@ -82,8 +84,6 @@ function calc() {
 
 app.get('/', function(req, res){
 	// res.session.id = getRandomInt(100); // prevents double voting
-	// res.send('dance. dance Jonathan.');
-  //res.sendFile(__dirname + '/index.html');
   res.render('index', { title: 'DAN 321' });
 });
 
