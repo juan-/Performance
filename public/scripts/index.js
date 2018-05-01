@@ -23,7 +23,7 @@ $(function () {
     }
     socket.emit('vote', {
       user_id: user_id,
-      number: $(this).find('.movement-number').html()
+      number: parseInt($(this).find('.movement-number').html(), 10)
     });
 
     $(this).addClass('selected');

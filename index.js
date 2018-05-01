@@ -28,6 +28,18 @@ function shuffle(a) {
 
 // Calculate the number of moves per dancer from voting results and brodcast them
 function calc() {
+  var counter = {}
+  votes.forEach(function(word) {
+     counter[word] = (counter[word] || 0) + 1;
+  });
+  // sort by frequency
+  votes.sort(function(x, y) {
+    return counter[y] - counter[x];
+  });
+  while (votes.length > 60) {
+    votes.pop();
+  }
+
   shuffle(votes);
   moves = votes.slice(0, numPerformers);
 
@@ -61,11 +73,11 @@ app.get('/reset', function(req, res){
 io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('vote', function(msg){
-    console.log(msg);
     if (usersDidVote[msg.user_id]) {
       return;
     }
-		votes.push(msg.number);
+    votes.push(msg.number);
+    votes.push(msg.number); // each vote count for 2 to converge it faster?
     usersDidVote[msg.user_id] = true;
   });
 });
