@@ -29,13 +29,13 @@ html, body, .container {
 }
 
 .entry:hover {
-  cursor: url('/images/heart.png') 64 64, auto;
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
 
 .entry:active {
   background-color: #1787FB;
   color: white;
+  cursor: url('/images/heart.png') 64 64, auto;
 }
 
 .entry .performer {

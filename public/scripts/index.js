@@ -1,6 +1,8 @@
 $(function () {
   var socket = io();
-  socket.on('moves', function(msg){
-    console.log(msg);
+  socket.on('moves', function(moves){
+    $('.movement-number').each(function(idx) {
+      $(this).html(moves[idx]);
+    })
   });
 });

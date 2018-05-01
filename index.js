@@ -89,10 +89,12 @@ app.get('/', function(req, res){
 
 app.get('/begin', function(req, res){
 	start();
+  res.send('started');
 });
 
 app.get('/stop', function(req, res){
 	clearTimeout(fTimer);
+  res.send('stopped');
 });
 
 
@@ -107,5 +109,5 @@ io.on('connection', function(socket){
 });
 
 app.listen(port, function(){
-  console.log('listening on *:8080');
+  console.log('listening on *:' + port);
 });
