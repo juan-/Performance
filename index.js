@@ -17,6 +17,7 @@ var numPerformers = 4;
 var votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
 var moves = votes.slice(0, numPerformers);
 var usersDidVote = {};
+var howManyCalcs = 0;
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
@@ -36,7 +37,7 @@ function calc() {
   votes.sort(function(x, y) {
     return counter[y] - counter[x];
   });
-  while (votes.length > 60) {
+  while (votes.length > 60) { // ditch the least popular ones
     votes.pop();
   }
 
@@ -47,6 +48,7 @@ function calc() {
 	io.emit('moves', moves);
 
   usersDidVote = [];
+  howManyCalcs++;
 }
 
 
@@ -66,9 +68,9 @@ app.get('/reset', function(req, res){
   votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
   moves = votes.slice(0, numPerformers);
   usersDidVote = {};
+  howManyCalcs = 0;
   res.send('reset');
 });
-
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -76,8 +78,9 @@ io.on('connection', function(socket){
     if (usersDidVote[msg.user_id]) {
       return;
     }
-    votes.push(msg.number);
-    votes.push(msg.number); // each vote count for 2 to converge it faster?
+    for (var i = 0; i <= howManyCalcs; i++) { // votes count for more later in the game?
+      votes.push(msg.number);
+    }
     usersDidVote[msg.user_id] = true;
   });
 });
