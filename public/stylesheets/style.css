@@ -34,7 +34,7 @@ html, body, .container {
 
 .entry:not(.disabled):active, .entry.selected {
   background-color: #1787FB !important;
-  color: white;
+  color: white !important;
 }
 
 .entry:not(.disabled):active {

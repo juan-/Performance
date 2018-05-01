@@ -10,6 +10,9 @@ $(function () {
     $('.movement-number').each(function(idx) {
       $(this).html(moves[idx]);
     });
+    $('.image img').each(function(idx) {
+      $(this).attr('src', '/images/movements/image' + moves[idx] + '.png');
+    });
     $('.entry').removeClass('disabled');
     $('.entry').removeClass('selected');
   });

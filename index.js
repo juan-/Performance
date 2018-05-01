@@ -18,8 +18,6 @@ var votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
 var moves = votes.slice(0, numPerformers);
 var usersDidVote = {};
 
-// var fTimer;
-
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -28,23 +26,10 @@ function shuffle(a) {
   return a;
 }
 
-function start() {
-	// fTimer = setTimeout(calc, 60000);
-  calc();
-}
-
 // Calculate the number of moves per dancer from voting results and brodcast them
 function calc() {
   shuffle(votes);
   moves = votes.slice(0, numPerformers);
-
-  // counts for debugging
-  var counts = {};
-  for (var i = 0; i < votes.length; i++) {
-    var num = votes[i];
-    counts[num] = counts[num] ? counts[num] + 1 : 1;
-  }
-  console.log(counts);
 
 	// send new moves
 	io.emit('moves', moves);
@@ -60,14 +45,16 @@ app.get('/', function(req, res){
   res.render('index', { title: 'DAN 321', moves: moves });
 });
 
-app.get('/begin', function(req, res){
-	start();
-  res.send('started');
+app.get('/calc', function(req, res){
+	calc();
+  res.send('done');
 });
 
-app.get('/stop', function(req, res){
-	// clearTimeout(fTimer);
-  res.send('stopped');
+app.get('/reset', function(req, res){
+  votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
+  moves = votes.slice(0, numPerformers);
+  usersDidVote = {};
+  res.send('reset');
 });
 
 
