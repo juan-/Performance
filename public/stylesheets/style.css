@@ -1,12 +1,12 @@
 html, body, .container {
   background-color: #e9ebee !important;
   min-height: 100vh;
-  font-size: 18px;
+  font-size: 14px;
   cursor: url('/images/thumb.png') 64 64, auto;
 }
 
 .container {
-  margin-top: 80px;
+  margin-top: 55px;
 }
 
 .topbar {
@@ -14,18 +14,18 @@ html, body, .container {
   top: 0;
   left: 0;
   z-index: 999;
-  height: 50px;
+  height: 40px;
   width: 100%;
   background-color: #4267b2;
   border-bottom: 1px solid #29487d;
 }
 
 .entry {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   border-radius: 5px;
   border: 1px solid #aaa;
   background-color: #fff;
-  padding: 12px;
+  padding: 10px;
 }
 
 .entry:not(.disabled):hover {
@@ -47,4 +47,24 @@ html, body, .container {
 
 .entry .performer {
   font-weight: bold;
+  color: #4267b2;
+}
+
+.entry .image {
+  margin-top: 5px;
+  text-align: center;
+  background-color: #ddd;
+}
+
+.entry .image img {
+  max-height: 100px;
+}
+
+.propic {
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+  overflow: hidden;
 }
