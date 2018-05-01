@@ -16,7 +16,6 @@ var section = [1, 16, 31, 46];
 var numPerformers = 4;
 var votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
 var moves = votes.slice(0, numPerformers);
-var usersDidVote = {};
 var howManyCalcs = 0;
 
 function shuffle(a) {
@@ -41,14 +40,17 @@ function calc() {
     votes.pop();
   }
 
+  var copySorted = votes.slice();
+
   shuffle(votes);
   moves = votes.slice(0, numPerformers);
 
 	// send new moves
 	io.emit('moves', moves);
 
-  usersDidVote = [];
   howManyCalcs++;
+
+  return copySorted;
 }
 
 
@@ -60,14 +62,13 @@ app.get('/', function(req, res){
 });
 
 app.get('/calc', function(req, res){
-	calc();
-  res.send('done');
+	var sortedVotes = calc();
+  res.send(sortedVotes);
 });
 
 app.get('/reset', function(req, res){
   votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
   moves = votes.slice(0, numPerformers);
-  usersDidVote = {};
   howManyCalcs = 0;
   res.send('reset');
 });
@@ -75,13 +76,9 @@ app.get('/reset', function(req, res){
 io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('vote', function(msg){
-    if (usersDidVote[msg.user_id]) {
-      return;
-    }
     for (var i = 0; i <= howManyCalcs; i++) { // votes count for more later in the game?
-      votes.push(msg.number);
+      votes.push(msg);
     }
-    usersDidVote[msg.user_id] = true;
   });
 });
 

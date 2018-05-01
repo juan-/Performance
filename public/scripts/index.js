@@ -21,10 +21,7 @@ $(function () {
     if ($(this).hasClass('disabled')) {
       return;
     }
-    socket.emit('vote', {
-      user_id: user_id,
-      number: parseInt($(this).find('.movement-number').html(), 10)
-    });
+    socket.emit('vote', parseInt($(this).find('.movement-number').html(), 10));
 
     $(this).addClass('selected');
     $('.entry').addClass('disabled');
