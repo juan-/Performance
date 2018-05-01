@@ -45,11 +45,6 @@ html, body, .container {
   background-color: #e9ebee;
 }
 
-.entry .performer {
-  font-weight: bold;
-  color: #4267b2;
-}
-
 .entry .image {
   margin-top: 5px;
   text-align: center;
@@ -67,4 +62,19 @@ html, body, .container {
   margin-bottom: 5px;
   border-radius: 50%;
   overflow: hidden;
+}
+
+.performer-meta {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.entry .performer .name {
+  font-weight: bold;
+  color: #4267b2;
+}
+
+.entry .performer .meta {
+  font-size: 12px;
+  color: #777;
 }
