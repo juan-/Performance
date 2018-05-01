@@ -28,14 +28,21 @@ html, body, .container {
   padding: 12px;
 }
 
-.entry:hover {
+.entry:not(.disabled):hover {
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
 
-.entry:active {
-  background-color: #1787FB;
+.entry:not(.disabled):active, .entry.selected {
+  background-color: #1787FB !important;
   color: white;
+}
+
+.entry:not(.disabled):active {
   cursor: url('/images/heart.png') 64 64, auto;
+}
+
+.entry.disabled {
+  background-color: #e9ebee;
 }
 
 .entry .performer {

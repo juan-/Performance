@@ -13,70 +13,43 @@ var port = process.env.PORT || 8080;
 
 var section = [1, 16, 31, 46];
 
-var d = 4;
-var prob = [];
-var votes = [];
-var moves = [];
-var voters = [];
+var numPerformers = 4;
+var votes = shuffle(Array.from(Array(60), (e,i)=>i+1));
+var moves = votes.slice(0, numPerformers);
+var usersDidVote = {};
 
-var fTimer;
+// var fTimer;
 
-// simulation response
-// votes[0] = 4;
-// votes[1] = 5;
-// votes[2] = 1;
-// votes[3] = 2;
-// numVotes = votes.reduce((a, b) => a + b, 0);
-// calc();
-
-
-// Debug
-// prob[1] = Math.floor(votes[0]/numVotes*d);
-// prob[2] = Math.floor(votes[1]/numVotes*d);
-// prob[3] = Math.floor(votes[2]/numVotes*d);
-// prob[4] = Math.floor(votes[3]/numVotes*d);
-//console.log(prob)
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 function start() {
-	fTimer = setTimeout(calc, 60000);
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
-function gaussianRand() {
-  var rand = 0;
-
-  for (var i = 0; i < 6; i += 1) {
-    rand += Math.random();
-  }
-
-  return rand / 6;
-}
-
-function gaussianRandom(start, end) {
-  return Math.floor(start + gaussianRand() * (end - start + 1));
+	// fTimer = setTimeout(calc, 60000);
+  calc();
 }
 
 // Calculate the number of moves per dancer from voting results and brodcast them
 function calc() {
-	var numVotes = votes.reduce((a, b) => a + b, 0);
-	console.log(numVotes)
-	for (i=0; i < 4; i++) {
-		prob[i] = Math.round(votes[i]/(numVotes)*d);
-		for(j=0;j < prob[i];j++) {
-			moves.push(gaussianRandom(0, 15) + section[i]);
-		}
-	}
-	console.log(prob);
-	console.log(moves);
+  shuffle(votes);
+  moves = votes.slice(0, numPerformers);
+
+  // counts for debugging
+  var counts = {};
+  for (var i = 0; i < votes.length; i++) {
+    var num = votes[i];
+    counts[num] = counts[num] ? counts[num] + 1 : 1;
+  }
+  console.log(counts);
 
 	// send new moves
 	io.emit('moves', moves);
-	// reset params
-	votes = [];
-	voters = [];
+
+  usersDidVote = [];
 }
 
 
@@ -84,7 +57,7 @@ function calc() {
 
 app.get('/', function(req, res){
 	// res.session.id = getRandomInt(100); // prevents double voting
-  res.render('index', { title: 'DAN 321' });
+  res.render('index', { title: 'DAN 321', moves: moves });
 });
 
 app.get('/begin', function(req, res){
@@ -93,21 +66,23 @@ app.get('/begin', function(req, res){
 });
 
 app.get('/stop', function(req, res){
-	clearTimeout(fTimer);
+	// clearTimeout(fTimer);
   res.send('stopped');
 });
 
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  socket.on('vote', function(move, id){
-  	if (!voters[id]) {
-  		votes[move] = votes[move] + 1;
-  		voters[id] = 1;
-  	}
+  socket.on('vote', function(msg){
+    console.log(msg);
+    if (usersDidVote[msg.user_id]) {
+      return;
+    }
+		votes.push(msg.number);
+    usersDidVote[msg.user_id] = true;
   });
 });
 
-app.listen(port, function(){
+http.listen(port, function(){
   console.log('listening on *:' + port);
 });
